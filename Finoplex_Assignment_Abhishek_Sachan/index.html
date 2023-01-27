@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+
+<style>
+.heading{
+    text-align: center;
+    align-items: center;
+}
+canvas{ display: flex;
+    border: 1px solid black;
+    height: fit-content;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    margin-left: 30%;
+}
+.reset{
+     display: flex;
+    background-color: black;
+    color: aqua;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    margin-left: 65%;
+    margin-top: 5%;
+}
+</style>
+<body>
+    <h1 class="heading">Bubble App</h1>
+    <canvas id="myCanvas1" height="300px" width="500px"></canvas>
+    <button type="button" class="reset" onclick=reset()>Reset</button>
+    
+    <script>
+    var canvas = document.getElementById("myCanvas1");
+    var ctx = canvas.getContext("2d");
+    var arrX=canvas.width-30;
+   
+    var circles=[{circleX:50,circleY:50,colors:'yellow'},{circleX:50,circleY:120,colors:'blue'},{circleX:50,circleY:190,colors:'red'},{circleX:50,circleY:260,colors:'green'}]
+    var arrowSpeed = 1;
+    var arrows = [
+      { arrowX: arrX, arrowY: 15, color: "black" },
+      { arrowX: arrX, arrowY: 90, color: "black" },
+      { arrowX: arrX, arrowY: 165, color: "black" },
+      { arrowX: arrX, arrowY: 240, color: "black" }
+    ]
+//module 1
+    function drawCircles() {
+        for(i=0;i<circles.length;i++){
+        ctx.beginPath();
+      ctx.arc(circles[i].circleX, circles[i].circleY, 30, 0, 2 * Math.PI);
+      ctx.fillStyle = circles[i].colors;
+      ctx.fill();
+        }
+
+    }
+    //module 2
+    function drawCircles1(i) {
+        
+        ctx.beginPath();
+      ctx.arc(circles[i].circleX, circles[i].circleY, 30, 0, 2 * Math.PI);
+      ctx.fillStyle = 'gray';
+      ctx.fill();
+        
+
+    }
+//module 1
+    function drawArrows() {
+        for(i=0;i<arrows.length;i++){
+            ctx.beginPath();
+      ctx.moveTo(arrows[i].arrowX, arrows[i].arrowY );
+      ctx.lineTo(arrows[i].arrowX-50, arrows[i].arrowY+25 );
+      ctx.lineTo(arrows[i].arrowX , arrows[i].arrowY+50);
+      ctx.fillStyle='Black';
+      ctx.fill();
+
+        }
+       
+    }
+    //module 2
+    function animateArrow(i) {
+      var id = setInterval(frame, 5);
+      function frame() {
+        if (arrows[i].arrowX < circles[i].circleX) {
+          clearInterval(id);
+          circles[i].colors='gray';
+          drawCircles1(i);
+          drawArrows();
+        } else {
+            arrows[i].arrowX--;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawCircles();
+          drawArrows();
+          
+  
+        }
+      }
+    }
+
+    drawCircles();
+    drawArrows();
+//module 2
+    canvas.addEventListener("click", function(event) {
+      var x = event.clientX - canvas.offsetLeft;
+      var y = event.clientY - canvas.offsetTop;
+      circles.forEach(function(circle,i){
+        if(Math.sqrt(Math.pow(x-circle.circleX,2)+Math.pow(y-circle.circleY,2))<40){
+            animateArrow(i);
+        }
+      })
+    });
+    function reset(){
+        var arrx = canvas.width - 40;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawCircles();
+          drawArrows();
+          history.go();
+history.go(0)
+
+    }
+  </script>
+</body>
+</html>
